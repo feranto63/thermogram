@@ -13,7 +13,7 @@ import telepot
 
 ###################### gestisce i comandi inviati al Telegram Bot
 def handle(msg):
-    global Ferruccio_at_home, Claudia_at_home, Lorenzo_at_home, Riccardo_at_home
+    global Piero_at_home, Annamaria_at_home
     global last_report, report_interval     #parametri per il monitoraggio su file delle temperature
     global heating_status, heating_standby  #stato di accensione dei termosifoni
     global who_is_at_home, how_many_at_home
@@ -58,17 +58,11 @@ def handle(msg):
     elif command == '/casa':
         who_is_at_home=""
         how_many_at_home=0
-        if Claudia_at_home:
-            who_is_at_home=who_is_at_home+"Claudia "
+        if Annamaria_at_home:
+            who_is_at_home=who_is_at_home+"Annamaria "
             how_many_at_home=how_many_at_home+1
-        if Ferruccio_at_home:
-            who_is_at_home=who_is_at_home+"Ferruccio "
-            how_many_at_home=how_many_at_home+1
-        if Lorenzo_at_home:
-            who_is_at_home=who_is_at_home+"Lorenzo "
-            how_many_at_home=how_many_at_home+1
-        if Riccardo_at_home:
-            who_is_at_home=who_is_at_home+"Riccardo "
+        if Pieroo_at_home:
+            who_is_at_home=who_is_at_home+"Piero "
             how_many_at_home=how_many_at_home+1
         if how_many_at_home != 0:
             if how_many_at_home == 1:
@@ -81,7 +75,8 @@ def handle(msg):
         # send message for help
         bot.sendMessage(chat_id, "Sono il Maggiordomo e custodisco la casa. Attendo i suoi comandi Padrone per eseguirli prontamente e rendere la sua vita piacevole e felice.\n/now - mostra la temperatura\n/ho_freddo - accende il riscaldamento\n/ho_caldo - spegne il riscaldamento\n/casa - chi e' a casa?")
 
-    elif command == '/ferin': #forza Ferruccio a casa
+    elif command == '/pieroin': #forza Piero a casa
+#### ============= WORKING HERE ==============
         Ferruccio_at_home = True
         f = open("Ferruccio_at_home","w")  #apre il file dei dati in write mode, se il file non esiste lo crea
         f.write("IN")  #scrive la info di presence sul file
