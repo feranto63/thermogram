@@ -61,7 +61,7 @@ def handle(msg):
         if Annamaria_at_home:
             who_is_at_home=who_is_at_home+"Annamaria "
             how_many_at_home=how_many_at_home+1
-        if Pieroo_at_home:
+        if Piero_at_home:
             who_is_at_home=who_is_at_home+"Piero "
             how_many_at_home=how_many_at_home+1
         if how_many_at_home != 0:
