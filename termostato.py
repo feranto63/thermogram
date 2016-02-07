@@ -252,7 +252,7 @@ def set_presence(presence_msg):
 #connect to gmail
 def read_gmail():
     mail = imaplib.IMAP4_SSL('imap.gmail.com')
-    mail.login('xxxxxx@gmail.com','xxxxxxx') #login e password da mettere su file successivamente
+    mail.login('BattistaMaggiordomoBot@gmail.com','peterbel') #login e password da mettere su file successivamente
     mail.select('inbox')
     mail.list()
 
