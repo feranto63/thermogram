@@ -273,6 +273,25 @@ def read_gmail():
             logging.info("Ho gestito "+str(n)+" messaggi di presence")
 ############################### fine gestione presence via email #######################
 
+############################ TEST Internet connection #############
+import socket
+REMOTE_SERVER = "www.google.com"
+def is_connected():
+    now = time.time()
+    localtime = time.asctime( time.localtime(now) )
+    try:
+        # see if we can resolve the host name -- tells us if there is
+        # a DNS listening
+        host = socket.gethostbyname(REMOTE_SERVER)
+        # connect to the host -- tells us if the host is actually
+        # reachable
+        s = socket.create_connection((host, 80), 2)
+        return True
+    except Exception as e:
+        logging.exception("www.google.com not reachable at "+str(localtime))
+        pass
+    return False
+######### fine test internet connection
 
 #inizio programma
 
@@ -322,7 +341,8 @@ while True:
         
             last_report = now
         # verifica se ci sono nuovi aggiornamenti sulla presence (via email)
-        read_gmail()
+        if is_connected():
+            read_gmail()
         time.sleep(60)
     #except Exception:
     #    logging.exception("C'e' stato un errore del programma termostato")
