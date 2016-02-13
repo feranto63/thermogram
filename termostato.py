@@ -74,7 +74,10 @@ def handle(msg):
     elif command == '/help':
         # send message for help
         bot.sendMessage(chat_id, "Sono il Maggiordomo e custodisco la casa. Attendo i suoi comandi Padrone per eseguirli prontamente e rendere la sua vita piacevole e felice.\n/now - mostra la temperatura\n/ho_freddo - accende il riscaldamento\n/ho_caldo - spegne il riscaldamento\n/casa - chi e' a casa?")
-
+        if heating_status:
+            bot.sendMessage(chat_id, "Riscaldamento attivato")
+        else:
+            bot.sendMessage(chat_id, "Riscaldamento disattivato")
     elif command == '/pieroin': #forza Piero a casa
         Piero_at_home = True
         f = open("Piero_at_home","w")  #apre il file dei dati in write mode, se il file non esiste lo crea
@@ -188,6 +191,7 @@ def set_presence(presence_msg):
         # scrive la info di presence su file
 
         localtime = time.asctime( orario )
+        ora_minuti = time.strftime("%H:%M", orario)
         filepresence = open("filepresence","a")  #apre il file dei dati in append mode, se il file non esiste lo crea
         filepresence.write(presence_msg+" "+localtime+"\n")  #scrive la info di presence ed il timestam sul file
         filepresence.close()  #chiude il file dei dati e lo salva
@@ -196,13 +200,13 @@ def set_presence(presence_msg):
             if status == 'IN':
                 if Piero_at_home == False:
                     Piero_at_home = True
-                    bot.sendMessage(CHAT_ID, "Benvenuto a casa "+nome)
+                    bot.sendMessage(CHAT_ID, "Benvenuto a casa "+nome+"\nSono le "+ora_minuti)
                     f = open("Piero_at_home","w")  #apre il file dei dati in write mode, se il file non esiste lo crea
                     f.write("IN")  #scrive la info di presence sul file
                     f.close()  #chiude il file dei dati e lo salva
             elif Piero_at_home:
                 Piero_at_home = False
-                bot.sendMessage(CHAT_ID, "Arrivederci a presto "+nome)
+                bot.sendMessage(CHAT_ID, "Arrivederci a presto "+nome+"\nSono le "+ora_minuti)
                 f = open("Piero_at_home","w")  #apre il file dei dati in write mode, se il file non esiste lo crea
                 f.write("OUT")  #scrive la info di presence sul file
                 f.close()  #chiude il file dei dati e lo salva
@@ -210,13 +214,13 @@ def set_presence(presence_msg):
             if status == 'IN':
                 if Annamaria_at_home == False:
                     Annamaria_at_home = True
-                    bot.sendMessage(CHAT_ID, "Benvenuto a casa "+nome)
+                    bot.sendMessage(CHAT_ID, "Benvenuto a casa "+nome+"\nSono le "+ora_minuti)
                     f = open("Annamaria_at_home","w")  #apre il file dei dati in write mode, se il file non esiste lo crea
                     f.write("IN")  #scrive la info di presence sul file
                     f.close()  #chiude il file dei dati e lo salva
             elif Annamaria_at_home:
                 Annamaria_at_home = False
-                bot.sendMessage(CHAT_ID, "Arrivederci a presto "+nome)
+                bot.sendMessage(CHAT_ID, "Arrivederci a presto "+nome+"\nSono le "+ora_minuti)
                 f = open("Annamaria_at_home","w")  #apre il file dei dati in write mode, se il file non esiste lo crea
                 f.write("OUT")  #scrive la info di presence sul file
                 f.close()  #chiude il file dei dati e lo salva
