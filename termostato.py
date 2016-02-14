@@ -47,11 +47,17 @@ def handle(msg):
         else:
             GPIO.output(17, 1) # sets port 0 to 1 (3.3V, on) per accendere i termosifoni
             heating_status = True #print "HEATING ON "+localtime+"\n"
+            f = open("heating_status","w")
+            f.write('ON')
+            f.close()  #chiude il file dei dati e lo salva
             bot.sendMessage(chat_id, "Accendo il riscaldamento, Padrone")
     elif command == '/ho_caldo':
         if heating_status:
             GPIO.output(17, 0) # sets port 0 to 0 (3.3V, off) per spengere i termosifoni
             heating_status = False #print "HEATING OFF "+localtime+"\n"
+            f = open("heating_status","w")
+            f.write('OFF')
+            f.close()  #chiude il file dei dati e lo salva
             bot.sendMessage(chat_id, "Spengo il riscaldamento, Padrone")
         else:      
             bot.sendMessage(chat_id, "Dovresti aprire le finestre, Padrone")
@@ -238,12 +244,18 @@ def set_presence(presence_msg):
     if how_many_at_home == 0: #nessuno in casa
         if heating_standby == False:  #standby termosifoni non attivo
             heating_standby = True
+            f = open("heating_standby","w")
+            f.write('ON')
+            f.close()  #chiude il file dei dati e lo salva
             if heating_status: #se termosifoni attivi
                 GPIO.output(17, 0) # spenge i termosifoni
                 bot.sendMessage(CHAT_ID, "Ho messo in stand by il riscaldamento in attesa che rientri qualcuno a casa")
     else: #almeno una persona in casa
         if heating_standby: #se standby attivo
             heating_standby = False
+            f = open("heating_standby","w")
+            f.write('OFF')
+            f.close()  #chiude il file dei dati e lo salva
             if heating_status: #se termosifoni attivi prima dello standby
                 GPIO.output(17, 1) # riaccende i termosifoni
                 bot.sendMessage(CHAT_ID, "Ho riavviato il riscaldamento per il tuo confort, Padrone")
@@ -321,12 +333,37 @@ try:
 except IOError:
     Annamaria_at_home = False  #se il file non e' presente imposto la presence a False
 
+try:
+    f = open("heating_status","r")  #apre il file dei dati in read mode
+    h_status=f.read().strip()   #legge la info di presence sul file
+    f.close()  #chiude il file dei dati e lo salva
+    if h_status == "ON":
+        heating_status = True
+    else:
+        heating_status = False
+except IOError:
+    heating_status = False  #se il file non e' presente imposto la presence a False
+
+try:
+    f = open("heating_standby","r")  #apre il file dei dati in read mode
+    hby_status=f.read().strip()   #legge la info di presence sul file
+    f.close()  #chiude il file dei dati e lo salva
+    if hby_status == "ON":
+        heating_standby = True
+    else:
+        heating_standby = False
+except IOError:
+    heating_standby = False  #se il file non e' presente imposto la presence a False
+	
 bot = telepot.Bot(TOKEN)
 bot.notifyOnMessage(handle)
 logging.info("Listening ...")
 
 show_keyboard = {'keyboard': [['/now','/casa'], ['/ho_caldo','/ho_freddo']]} #tastiera personalizzata
 bot.sendMessage(CHAT_ID, 'Mi sono appena svegliato, Padrone')
+if heating_status and not heating_standby:
+    GPIO.output(17, 1) # sets port 0 to 0 (3.3V, off) per spengere i termosifoni
+    bot.sendMessage(CHAT_ID, "Rispristino il riscaldamento, Padrone")
 bot.sendMessage(CHAT_ID, 'Come ti posso aiutare?', reply_markup=show_keyboard)
 
 while True:
