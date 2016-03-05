@@ -226,7 +226,7 @@ def set_presence(presence_msg):
                     f.close()  #chiude il file dei dati e lo salva
             elif Annamaria_at_home:
                 Annamaria_at_home = False
-                bot.sendMessage(CHAT_ID, "Arrivederci a presto "+nome+"\nSono le "+ora_minuti)
+                bot.sendMessage(CHAT_ID, "Non credo ai miei circuiti "+nome+"\nSei finalmente uscita di casa, Padrona\nTi auguro una buona passeggiata\nSono le "+ora_minuti)
                 f = open("Annamaria_at_home","w")  #apre il file dei dati in write mode, se il file non esiste lo crea
                 f.write("OUT")  #scrive la info di presence sul file
                 f.close()  #chiude il file dei dati e lo salva
