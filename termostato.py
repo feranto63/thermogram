@@ -266,7 +266,7 @@ def set_presence(presence_msg):
 def connect(retries=5, delay=3):
     while True:
         try:
-        	imap_host = 'imap.gmail.com'
+			imap_host = 'imap.gmail.com'
            	mail = imaplib.IMAP4_SSL(imap_host)
            	mail.login('BattistaMaggiordomoBot@gmail.com','peterbel')
            	return mail
