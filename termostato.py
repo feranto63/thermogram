@@ -281,12 +281,11 @@ def connect(retries=5, delay=3):
 ##################### inizio gestione presence via email ################
 #connect to gmail
 def read_gmail():
-	
 	global mail
 	#mail = imaplib.IMAP4_SSL('imap.gmail.com')
     #mail.login('BattistaMaggiordomoBot@gmail.com','peterbel') #login e password da mettere su file successivamente
-    try:
-        mail.select('inbox')
+	try:
+		mail.select('inbox')
         mail.list()
         # Any Emails? 
         n=0
