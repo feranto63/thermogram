@@ -266,7 +266,7 @@ def set_presence(presence_msg):
 def connect(retries=5, delay=3):
     while True:
         try:
-			imap_host = 'imap.gmail.com'
+		imap_host = 'imap.gmail.com'
            	mail = imaplib.IMAP4_SSL(imap_host)
            	mail.login('BattistaMaggiordomoBot@gmail.com','peterbel')
            	return mail
@@ -283,28 +283,28 @@ def connect(retries=5, delay=3):
 def read_gmail():
 	global mail
 	#mail = imaplib.IMAP4_SSL('imap.gmail.com')
-    #mail.login('BattistaMaggiordomoBot@gmail.com','peterbel') #login e password da mettere su file successivamente
+	#mail.login('BattistaMaggiordomoBot@gmail.com','peterbel') #login e password da mettere su file successivamente
 	try:
 		mail.select('inbox')
-        mail.list()
-        # Any Emails? 
-        n=0
-        (retcode, messages) = mail.search(None, '(UNSEEN)')
-        if retcode == 'OK':
-            for num in messages[0].split() :
-                logging.info('Processing new emails...')
-                n=n+1
-                typ, data = mail.fetch(num,'(RFC822)')
-                for response_part in data:
-                    if isinstance(response_part, tuple):
-                        original = email.message_from_string(response_part[1])
-                        subject_text=str(original['Subject'])
-                        set_presence(subject_text) #richiama la funzione per la gestisce della presence
-                        typ, data = mail.store(num,'+FLAGS','\\Seen') #segna la mail come letta
-                logging.info("Ho gestito "+str(n)+" messaggi di presence")
-    except:
-        logging.debug('Errore nella lettura della mail')
-        mail = connect()
+        	mail.list()
+        	# Any Emails? 
+        	n=0
+        	(retcode, messages) = mail.search(None, '(UNSEEN)')
+        	if retcode == 'OK':
+        	    for num in messages[0].split() :
+                	logging.info('Processing new emails...')
+                	n=n+1
+                	typ, data = mail.fetch(num,'(RFC822)')
+                	for response_part in data:
+                    		if isinstance(response_part, tuple):
+                	        	original = email.message_from_string(response_part[1])
+                        		subject_text=str(original['Subject'])
+                        		set_presence(subject_text) #richiama la funzione per la gestisce della presence
+                        		typ, data = mail.store(num,'+FLAGS','\\Seen') #segna la mail come letta
+                	logging.info("Ho gestito "+str(n)+" messaggi di presence")
+ 	except:
+        	logging.debug('Errore nella lettura della mail')
+        	mail = connect()
 ############################### fine gestione presence via email #######################
 
 ############################ TEST Internet connection #############
