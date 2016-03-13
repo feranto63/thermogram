@@ -57,7 +57,9 @@ def initialize_schedule():
                     ['17','17','17','17','17','17','20','20','20','18','18','18','18','20','20','18','18','18','18','18','20','20','20','17'],
                     ['17','17','17','17','17','17','17','17','20','20','18','18','18','20','20','20','18','18','18','18','20','20','20','17'],
                     ['17','17','17','17','17','17','17','17','20','20','18','18','18','20','20','20','18','18','18','18','20','20','20','17']]
-
+    print mySchedule
+    
+    
 def current_target_temp():
     global mySchedule
     now = time.time()
@@ -111,7 +113,7 @@ def handle(msg):
             heatstat = "acceso"
         else:
             heatstat = "spento"
-        bot.sendMessage(chat_id, "La temperatura misurata e' di "+str("%0.1f" % CurTemp)  #+
+        bot.sendMessage(chat_id, "La temperatura misurata e' di "+str("%0.1f" % CurTemp))  #+
 #                                 " C, Padrone\nLa temperatura di confort e' di "+str(CurTargetTemp)+" C\n"+
 #                                 "Il riscaldamento e' "+heatstat)
     elif command == '/5m':
