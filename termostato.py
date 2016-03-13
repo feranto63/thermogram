@@ -111,6 +111,7 @@ def handle(msg):
             heatstat = "acceso"
         else:
             heatstat = "spento"
+        print "temperatura target:"+str(CurTargetTemp)
         bot.sendMessage(chat_id, "La temperatura misurata e' di "+str("%0.1f" % CurTemp)+
                                  " C, Padrone\nLa temperatura di confort e' di "+str(CurTargetTemp)+" C\n"+
                                  "Il riscaldamento e' "+heatstat)
