@@ -26,7 +26,7 @@ import telepot
 
 import requests
 
-import bluetooth
+#import bluetooth
 
 #import library for logging
 import logging
@@ -333,16 +333,16 @@ def check_presence_IP():
 ####################################################
 
 ############# controlla la presence con ping BT #################        
-def check_presence_BT():
-    global persona_BT, persona_at_home, persone_della_casa
-    for n in range (persone_della_casa):
-        result = bluetooth.lookup_name(persona_BT[n], timeout=5)
-        if (result != None):
-            if not persona_at_home[0]:
-                set_presence(persona[n]+' IN') #richiama la funzione per la gestisce della presence
-        else:
-            if persona_at_home[0]:
-                set_presence(persona[n]+' OUT') #richiama la funzione per la gestisce della presence
+#def check_presence_BT():
+#    global persona_BT, persona_at_home, persone_della_casa
+#    for n in range (persone_della_casa):
+#        result = bluetooth.lookup_name(persona_BT[n], timeout=5)
+#        if (result != None):
+#            if not persona_at_home[0]:
+#                set_presence(persona[n]+' IN') #richiama la funzione per la gestisce della presence
+#        else:
+#            if persona_at_home[0]:
+#                set_presence(persona[n]+' OUT') #richiama la funzione per la gestisce della presence
 ###################################################
 
 
