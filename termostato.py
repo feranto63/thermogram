@@ -107,7 +107,7 @@ def handle(msg):
     CurTemp = read_temp()
     CurTargetTemp=current_target_temp()
     
-    print "temp confort:"+strCurTargetTemp
+    print "temp confort:"+str(CurTargetTemp)
     
     logging.debug('elaboro il comando '+command)
     
