@@ -92,7 +92,7 @@ def handle(msg):
     global last_report, report_interval     #parametri per il monitoraggio su file delle temperature
     global heating_status, heating_standby  #stato di accensione dei termosifoni
     global who_is_at_home, how_many_at_home
-    global mySchedule, CurrTargetTemp
+    global mySchedule, CurTargetTemp
     
     logging.debug('inizio la gestione di handle')
     msg_type, chat_type, chat_id = telepot.glance(msg)
