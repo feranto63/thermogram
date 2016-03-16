@@ -543,7 +543,7 @@ while True:
             if now >= pulizie_timer:
                 pulizie_status=False
                 bot.sendMessage(CHAT_ID, "E' terminato il periodo per le pulizie, Padrone")
-        else
+        else:
             if not heating_status:
                 if CurTemp < (CurTargetTemp - 0.2):
                     TurnOnHeating()
