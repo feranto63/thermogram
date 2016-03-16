@@ -96,6 +96,7 @@ def handle(msg):
     global who_is_at_home, how_many_at_home
     global mySchedule, CurTargetTemp
     global CHAT_ID
+    global pulizie_status, pulizie_timer
     
     logging.debug('inizio la gestione di handle')
     msg_type, chat_type, chat_id = telepot.glance(msg)
@@ -175,7 +176,20 @@ def handle(msg):
             bot.sendMessage(CHAT_ID, "Riscaldamento attivato")
         else:
             bot.sendMessage(CHAT_ID, "Riscaldamento disattivato")
-
+    elif command == '/pulizie':
+        if not pulizie_status:
+            # set 2 hours off for cleaning
+            pulizie_status=True
+            pulizie_timer = time.time() + 2*60*60 #2 hours
+            if heating_status:
+                GPIO.output(17, 0) # sets port 0 to 0 (3.3V, off) per spengere i termosifoni
+            bot.sendMessage(CHAT_ID, "Disattivo il riscaldamento Padrone cosi' puoi fare le pulizie")
+        else
+            # set 2 hours off for cleaning
+            pulizie_status=False
+            if heating_status:
+                GPIO.output(17, 1) # sets port 0 to 0 (3.3V, off) per spengere i termosifoni
+            bot.sendMessage(CHAT_ID, "Modalita' pulizie disattivata")
     else:
         bot.sendMessage(CHAT_ID, "Puoi ripetere, Padrone? I miei circuiti sono un po' arrugginiti")
 
@@ -214,6 +228,10 @@ report_interval = 300  # report every 300 seconds (5 min) as a default
 # variable for heating status
 heating_status = False
 heating_standby = False
+
+# variables for cleaning period
+pulizie_status=False
+pulizie_timer=None
 
 
 ################# gestione della interfaccia di GPIO   
@@ -503,7 +521,7 @@ bot = telepot.Bot(TOKEN)
 bot.notifyOnMessage(handle)
 logging.info("Listening ...")
 
-show_keyboard = {'keyboard': [['/now','/casa'], ['/ho_caldo','/ho_freddo']]} #tastiera personalizzata
+show_keyboard = {'keyboard': [['/now','/casa'], ['/ho_caldo','/ho_freddo'],['/pulizie','/help']]} #tastiera personalizzata
 bot.sendMessage(CHAT_ID, 'Mi sono appena svegliato, Padrone')
 
 if heating_status and not heating_standby:
@@ -521,12 +539,17 @@ while True:
         localtime = time.asctime( time.localtime(now) )
         CurTargetTemp=current_target_temp()
         CurTemp = read_temp()
-        if not heating_status:
-            if CurTemp < CurTargetTemp:
-                TurnOnHeating()
-        else:
-            if CurTemp > CurTargetTemp:
-                TurnOffHeating()
+        if pulizie_status:
+            if now >= pulizie_timer:
+                pulizie_status=False
+                bot.sendMessage(CHAT_ID, "E' terminato il periodo per le pulizie, Padrone")
+        else
+            if not heating_status:
+                if CurTemp < (CurTargetTemp - 0.2):
+                    TurnOnHeating()
+            else:
+                if CurTemp > (CurTargetTemp + 0.2):
+                    TurnOffHeating()
         if report_interval is not None and last_report is not None and now - last_report >= report_interval:
             #apre il file dei dati in append mode, se il file non esiste lo crea
             filedati = open("filedati","a")
