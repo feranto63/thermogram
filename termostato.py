@@ -184,7 +184,7 @@ def handle(msg):
             if heating_status:
                 GPIO.output(17, 0) # sets port 0 to 0 (3.3V, off) per spengere i termosifoni
             bot.sendMessage(CHAT_ID, "Disattivo il riscaldamento Padrone cosi' puoi fare le pulizie")
-        else
+        else:
             # set 2 hours off for cleaning
             pulizie_status=False
             if heating_status:
