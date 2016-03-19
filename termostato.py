@@ -539,17 +539,17 @@ while True:
         localtime = time.asctime( time.localtime(now) )
         CurTargetTemp=current_target_temp()
         CurTemp = read_temp()
-        if pulizie_status:
-            if now >= pulizie_timer:
-                pulizie_status=False
-                bot.sendMessage(CHAT_ID, "E' terminato il periodo per le pulizie, Padrone")
-        else:
-            if not heating_status:
-                if CurTemp < (CurTargetTemp - 0.2):
-                    TurnOnHeating()
-            else:
-                if CurTemp > (CurTargetTemp + 0.2):
-                    TurnOffHeating()
+#        if pulizie_status:
+#            if now >= pulizie_timer:
+#                pulizie_status=False
+#                bot.sendMessage(CHAT_ID, "E' terminato il periodo per le pulizie, Padrone")
+#        else:
+#            if not heating_status:
+#                if CurTemp < (CurTargetTemp - 0.2):
+#                    TurnOnHeating()
+#            else:
+#                if CurTemp > (CurTargetTemp + 0.2):
+#                    TurnOffHeating()
         if report_interval is not None and last_report is not None and now - last_report >= report_interval:
             #apre il file dei dati in append mode, se il file non esiste lo crea
             filedati = open("filedati","a")
