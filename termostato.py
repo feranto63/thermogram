@@ -135,26 +135,26 @@ def handle(msg):
         bot.sendMessage(CHAT_ID, "Certamente, Padrone")
     elif command == '/ho_freddo':
         bot.sendMessage(CHAT_ID, "Funzionalita' in sviluppo")
-        if heating_status:
-            bot.sendMessage(CHAT_ID, "Sto facendo del mio meglio, Padrone")
-        else:
-            GPIO.output(17, 1) # sets port 0 to 1 (3.3V, on) per accendere i termosifoni
-            heating_status = True #print "HEATING ON "+localtime+"\n"
-            f = open("heating_status","w")
-            f.write('ON')
-            f.close()  #chiude il file dei dati e lo salva
-            bot.sendMessage(CHAT_ID, "Accendo il riscaldamento, Padrone")
+#        if heating_status:
+#            bot.sendMessage(CHAT_ID, "Sto facendo del mio meglio, Padrone")
+#        else:
+#            GPIO.output(17, 1) # sets port 0 to 1 (3.3V, on) per accendere i termosifoni
+#            heating_status = True #print "HEATING ON "+localtime+"\n"
+#            f = open("heating_status","w")
+#            f.write('ON')
+#            f.close()  #chiude il file dei dati e lo salva
+#            bot.sendMessage(CHAT_ID, "Accendo il riscaldamento, Padrone")
     elif command == '/ho_caldo':
         bot.sendMessage(CHAT_ID, "Funzionalita' in sviluppo")
-        if heating_status:
-            GPIO.output(17, 0) # sets port 0 to 0 (3.3V, off) per spengere i termosifoni
-            heating_status = False #print "HEATING OFF "+localtime+"\n"
-            f = open("heating_status","w")
-            f.write('OFF')
-            f.close()  #chiude il file dei dati e lo salva
-            bot.sendMessage(CHAT_ID, "Spengo il riscaldamento, Padrone")
-        else:      
-            bot.sendMessage(CHAT_ID, "Dovresti aprire le finestre, Padrone")
+#        if heating_status:
+#            GPIO.output(17, 0) # sets port 0 to 0 (3.3V, off) per spengere i termosifoni
+#            heating_status = False #print "HEATING OFF "+localtime+"\n"
+#            f = open("heating_status","w")
+#            f.write('OFF')
+#            f.close()  #chiude il file dei dati e lo salva
+#            bot.sendMessage(CHAT_ID, "Spengo il riscaldamento, Padrone")
+#        else:      
+#            bot.sendMessage(CHAT_ID, "Dovresti aprire le finestre, Padrone")
     elif command == '/casa':
         who_is_at_home=""
         how_many_at_home=0
@@ -539,17 +539,17 @@ while True:
         localtime = time.asctime( time.localtime(now) )
         CurTargetTemp=current_target_temp()
         CurTemp = read_temp()
-#        if pulizie_status:
-#            if now >= pulizie_timer:
-#                pulizie_status=False
-#                bot.sendMessage(CHAT_ID, "E' terminato il periodo per le pulizie, Padrone")
-#        else:
-#            if not heating_status:
-#                if CurTemp < (CurTargetTemp - 0.2):
-#                    TurnOnHeating()
-#            else:
-#                if CurTemp > (CurTargetTemp + 0.2):
-#                    TurnOffHeating()
+        if pulizie_status:
+            if now >= pulizie_timer:
+                pulizie_status=False
+                bot.sendMessage(CHAT_ID, "E' terminato il periodo per le pulizie, Padrone")
+        else:
+            if not heating_status:
+                if CurTemp < (CurTargetTemp - 0.2):
+                    TurnOnHeating()
+            else:
+                if CurTemp > (CurTargetTemp + 0.2):
+                    TurnOffHeating()
         if report_interval is not None and last_report is not None and now - last_report >= report_interval:
             #apre il file dei dati in append mode, se il file non esiste lo crea
             filedati = open("filedati","a")
