@@ -11,6 +11,12 @@ persona_IP=['192.168.1.38','192.168.1.5','192.168.0.0','192.168.1.37'] #IP addre
 persona_BT=['F0:5B:7B:43:42:68','50:FC:9F:85:BE:F2','00:00:00:00:00:00','B4:3A:28:CC:C6:07'] #BT mac address of smartphone
 FILESCHEDULE="fileschedule"
 FILEHEATING="fileheating"
+HEAT_ON  = 0
+HEAT_OFF = 1
+HEAT_PIN = 17
+GATE_PIN = 22
+GATE_ON = 0
+GATE_OFF = 1
 
 #imports for thermometer reading
 import os
@@ -138,7 +144,7 @@ def handle(msg):
 #        if heating_status:
 #            bot.sendMessage(CHAT_ID, "Sto facendo del mio meglio, Padrone")
 #        else:
-#            GPIO.output(17, 1) # sets port 0 to 1 (3.3V, on) per accendere i termosifoni
+#            GPIO.output(HEAT_PIN, HEAT_ON) # sets port 0 to 1 (3.3V, on) per accendere i termosifoni
 #            heating_status = True #print "HEATING ON "+localtime+"\n"
 #            f = open("heating_status","w")
 #            f.write('ON')
@@ -147,7 +153,7 @@ def handle(msg):
     elif command == '/ho_caldo':
         bot.sendMessage(CHAT_ID, "Funzionalita' in sviluppo")
 #        if heating_status:
-#            GPIO.output(17, 0) # sets port 0 to 0 (3.3V, off) per spengere i termosifoni
+#            GPIO.output(HEAT_PIN, HEAT_OFF) # sets port 0 to 0 (3.3V, off) per spengere i termosifoni
 #            heating_status = False #print "HEATING OFF "+localtime+"\n"
 #            f = open("heating_status","w")
 #            f.write('OFF')
@@ -182,14 +188,19 @@ def handle(msg):
             pulizie_status=True
             pulizie_timer = time.time() + 2*60*60 #2 hours
             if heating_status:
-                GPIO.output(17, 0) # sets port 0 to 0 (3.3V, off) per spengere i termosifoni
+                GPIO.output(HEAT_PIN, HEAT_OFF) # sets port 0 to 0 (3.3V, off) per spengere i termosifoni
             bot.sendMessage(CHAT_ID, "Disattivo il riscaldamento Padrone cosi' puoi fare le pulizie")
         else:
             # set 2 hours off for cleaning
             pulizie_status=False
             if heating_status:
-                GPIO.output(17, 1) # sets port 0 to 0 (3.3V, off) per spengere i termosifoni
+                GPIO.output(HEAT_PIN, HEAT_ON) # sets port 0 to 0 (3.3V, off) per spengere i termosifoni
             bot.sendMessage(CHAT_ID, "Modalita' pulizie disattivata")
+    elif command == '/apri':
+        GPIO.output(GATE_PIN, GATE_ON)
+        bot.sendMessage(CHAT_ID, "Apro il cancello Padrone")
+        time.sleep(2)
+        GPIO.output(GATE_PIN, GATE_OFF)
     else:
         bot.sendMessage(CHAT_ID, "Puoi ripetere, Padrone? I miei circuiti sono un po' arrugginiti")
 
@@ -241,7 +252,8 @@ import RPi.GPIO as GPIO
 ##wiringpi.wiringPiSetup()
 ##wiringpi.pinMode(0, 1) # sets WP pin 0 to output
 GPIO.setmode(GPIO.BCM)
-GPIO.setup(17,GPIO.OUT)
+GPIO.setup(HEAT_PIN,GPIO.OUT)
+GPIO.setup(GATE_PIN,GPIO.OUT)
 
 #Find temperature from thermometer
 os.system('modprobe w1-gpio')
@@ -330,7 +342,7 @@ def set_presence(presence_msg):
             f.write('ON')
             f.close()  #chiude il file dei dati e lo salva
             if heating_status: #se termosifoni attivi
-                GPIO.output(17, 0) # spenge i termosifoni
+                GPIO.output(HEAT_PIN, HEAT_OFF) # spenge i termosifoni
                 bot.sendMessage(CHAT_ID, "Ho messo in stand by il riscaldamento in attesa che rientri qualcuno a casa")
     else: #almeno una persona in casa
         if heating_standby: #se standby attivo
@@ -339,7 +351,7 @@ def set_presence(presence_msg):
             f.write('OFF')
             f.close()  #chiude il file dei dati e lo salva
             if heating_status: #se termosifoni attivi prima dello standby
-                GPIO.output(17, 1) # riaccende i termosifoni
+                GPIO.output(HEAT_PIN, HEAT_ON) # riaccende i termosifoni
                 bot.sendMessage(CHAT_ID, "Ho riavviato il riscaldamento per il tuo confort, Padrone")
     #return set_presence            
 
@@ -396,7 +408,7 @@ def TurnOnHeating():
     if heating_standby:
        bot.sendMessage(CHAT_ID, "Fa un po' freddo, Padrone, ma solo solo a casa e faccio un po' di economia")
     else:
-        GPIO.output(17, 1) # sets port 0 to 1 (3.3V, on) per accendere i termosifoni
+        GPIO.output(HEAT_PIN, HEAT_ON) # sets port 0 to 1 (3.3V, on) per accendere i termosifoni
         bot.sendMessage(CHAT_ID, "Accendo il riscaldamento, Padrone")
         orario = time.localtime(now)
         localtime = time.asctime( orario )
@@ -414,7 +426,7 @@ def TurnOffHeating():
     f.write('OFF')
     f.close()  #chiude il file dei dati e lo salva
     
-    GPIO.output(17, 0) # sets port 0 to 0 (0V, off) per spegnere i termosifoni
+    GPIO.output(HEAT_PIN, HEAT_OFF) # sets port 0 to 0 (0V, off) per spegnere i termosifoni
     bot.sendMessage(CHAT_ID, "Spengo il riscaldamento, Padrone")
     orario = time.localtime(now)
     localtime = time.asctime( orario )
@@ -521,12 +533,16 @@ bot = telepot.Bot(TOKEN)
 bot.notifyOnMessage(handle)
 logging.info("Listening ...")
 
-show_keyboard = {'keyboard': [['/now','/casa'], ['/ho_caldo','/ho_freddo'],['/pulizie','/help']]} #tastiera personalizzata
+show_keyboard = {'keyboard': [['/now','/casa'], ['/ho_caldo','/ho_freddo'],['/pulizie','/apri']]} #tastiera personalizzata
 bot.sendMessage(CHAT_ID, 'Mi sono appena svegliato, Padrone')
 
 if heating_status and not heating_standby:
-    GPIO.output(17, 1) # sets port 0 to 0 (3.3V, off) per spengere i termosifoni
+    GPIO.output(HEAT_PIN, HEAT_ON) # sets port 0 to 0 (3.3V, off) per spengere i termosifoni
     bot.sendMessage(CHAT_ID, "Rispristino il riscaldamento, Padrone")
+else:
+    GPIO.output(HEAT_PIN, HEAT_OFF)
+    
+GPIO.output(GATE_PIN, GATE_OFF) #pulisce il circuito di apertura cancello
 
 bot.sendMessage(CHAT_ID, 'Come ti posso aiutare?', reply_markup=show_keyboard)
 
