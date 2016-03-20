@@ -200,10 +200,12 @@ def handle(msg):
             bot.sendMessage(CHAT_ID, "Modalita' pulizie disattivata")
     elif command == '/apri':
         GPIO.output(GATE_PIN, GATE_ON)
-        bot.sendMessage(CHAT_ID, "Apro il cancello Padrone")
-        if chat_id != CHAT_ID:
+        if chat_id == CHAT_ID:
+            bot.sendMessage(CHAT_ID, "Apro il cancello Padrone")
+        else:
             show_keyboard = {'keyboard': [['/apri']], 'resize_keyboard':True} #tastiera personalizzata
             bot.sendMessage(chat_id, "Apro il cancello, Visitatore della casa Bellezza", reply_markup=show_keyboard)
+            bot.sendMessage(CHAT_ID, "Un visitatore mi ha chiesto di aprire il cancello Padrone")
         time.sleep(2)
         GPIO.output(GATE_PIN, GATE_OFF)
     else:
@@ -214,7 +216,15 @@ def handle(msg):
 ############ legge da file il token del Telegram Bot e della chat id
 
 tokenpath = os.path.dirname(os.path.realpath(__file__)) + "/token"
-chatidpath = os.path.dirname(os.path.realpath(__file__)) + "/chatid"
+try:
+    chatidFile = open(chatidpath,'r')
+    CHAT_ID = chatidFile.read().strip()
+    chatidFile.close()
+except IOError:
+    logging.error("Non ho trovato il file di chatId. E' necessario creare un file 'chatid' con la chatid telegram per il bot")
+    # In ogni caso questo file NON deve essere tracciato da git - viene ignorato perche' menzionato nel .gitignore.")
+
+logging.info("caricata chatId.")
 
 
 try:
@@ -227,6 +237,16 @@ except IOError:
 
 logging.info("caricata token.")
         
+try:
+    chatidFile = open(chatidpath,'r')
+    CHAT_ID = chatidFile.read().strip()
+    chatidFile.close()
+except IOError:
+    logging.error("Non ho trovato il file di chatId. E' necessario creare un file 'chatid' con la chatid telegram per il bot")
+    # In ogni caso questo file NON deve essere tracciato da git - viene ignorato perche' menzionato nel .gitignore.")
+
+logging.info("caricata chatId.")
+
 try:
     chatidFile = open(chatidpath,'r')
     CHAT_ID = chatidFile.read().strip()
@@ -550,6 +570,11 @@ else:
 GPIO.output(GATE_PIN, GATE_OFF) #pulisce il circuito di apertura cancello
 
 bot.sendMessage(CHAT_ID, 'Come ti posso aiutare?', reply_markup=show_keyboard)
+
+#predispone la tastiera per i visitatori della casa
+show_keyboard = {'keyboard': [['/apri']], 'resize_keyboard':True} #tastiera personalizzata
+bot.sendMessage(CHAT_ID_GATE, "Premere /apri per aprire il cancello", reply_markup=show_keyboard)
+
 
 mail = connect() #apre la casella di posta
 
