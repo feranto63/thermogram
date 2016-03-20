@@ -116,6 +116,8 @@ def handle(msg):
     CurTargetTemp=current_target_temp()
     
     print "temp confort:"+str(CurTargetTemp)
+    print "chat_id ricevuto:"+str(chat_id)
+    print "chat_id del Maggiordomo Belleza:"+str (CHAT_ID)
     
     logging.debug('elaboro il comando '+command)
     
@@ -199,6 +201,9 @@ def handle(msg):
     elif command == '/apri':
         GPIO.output(GATE_PIN, GATE_ON)
         bot.sendMessage(CHAT_ID, "Apro il cancello Padrone")
+        if chat_id != CHAT_ID:
+            show_keyboard = {'keyboard': [['/apri']], 'resize_keyboard':True} #tastiera personalizzata
+            bot.sendMessage(chat_id, "Apro il cancello, Visitatore della casa Bellezza", reply_markup=show_keyboard)
         time.sleep(2)
         GPIO.output(GATE_PIN, GATE_OFF)
     else:
