@@ -119,6 +119,10 @@ def handle(msg):
     orario = time.localtime(now)
     localtime = time.asctime( orario )
     giorno_ora_minuti = time.strftime("%a %H:%M", orario)
+    if heating_status:
+        heatstat = "acceso"
+    else:
+        heatstat = "spento"
 
     print "temp confort:"+str(CurTargetTemp)
     print "chat_id ricevuto:"+str(chat_id)
@@ -126,10 +130,6 @@ def handle(msg):
     logging.debug('elaboro il comando '+command)
     
     if command == '/now':
-        if heating_status:
-            heatstat = "acceso"
-        else:
-            heatstat = "spento"
         bot.sendMessage(CHAT_ID, "La temperatura misurata e' di "+str("%0.1f" % CurTemp)+
                                  " C, Padrone\nLa temperatura di confort e' di "+str(CurTargetTemp)+" C\n"+
                                  "Il riscaldamento e' "+heatstat)
