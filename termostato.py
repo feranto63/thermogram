@@ -148,12 +148,12 @@ def handle(msg):
     elif command == '/ho_freddo':
         bot.sendMessage(CHAT_ID, "Ho capito che hai freddo")
         f = open("heating_update","a")
-        f.write("F,"+heatstat+","+giorno_ora_minuti+","+str(CurTemp)+","+str(CurTargetTemp)+"\n")
+        f.write("F,"+heatstat+","+giorno_ora_minuti+","+str("%0.1f" % CurTemp)+","+str(CurTargetTemp)+"\n")
         f.close()  #chiude il file dei dati e lo salva
     elif command == '/ho_caldo':
         bot.sendMessage(CHAT_ID, "Ho capito che hai caldo")
         f = open("heating_update","a")
-        f.write("C,"+heatstat+","+giorno_ora_minuti+","+str(CurTemp)+","+str(CurTargetTemp)+"\n")
+        f.write("C,"+heatstat+","+giorno_ora_minuti+","+str("%0.1f" % CurTemp)+","+str(CurTargetTemp)+"\n")
         f.close()  #chiude il file dei dati e lo salva
     elif command == '/casa':
         who_is_at_home=""
