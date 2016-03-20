@@ -216,16 +216,8 @@ def handle(msg):
 ############ legge da file il token del Telegram Bot e della chat id
 
 tokenpath = os.path.dirname(os.path.realpath(__file__)) + "/token"
-try:
-    chatidFile = open(chatidpath,'r')
-    CHAT_ID = chatidFile.read().strip()
-    chatidFile.close()
-except IOError:
-    logging.error("Non ho trovato il file di chatId. E' necessario creare un file 'chatid' con la chatid telegram per il bot")
-    # In ogni caso questo file NON deve essere tracciato da git - viene ignorato perche' menzionato nel .gitignore.")
-
-logging.info("caricata chatId.")
-
+chatidpath = os.path.dirname(os.path.realpath(__file__)) + "/chatid"
+chatidgatepath = os.path.dirname(os.path.realpath(__file__)) + "/chatid_cancello"
 
 try:
     tokenFile = open(tokenpath,'r')
@@ -248,11 +240,11 @@ except IOError:
 logging.info("caricata chatId.")
 
 try:
-    chatidFile = open(chatidpath,'r')
-    CHAT_ID = chatidFile.read().strip()
+    chatidFile = open(chatidgatepath,'r')
+    CHAT_ID_GATE = chatidFile.read().strip()
     chatidFile.close()
 except IOError:
-    logging.error("Non ho trovato il file di chatId. E' necessario creare un file 'chatid' con la chatid telegram per il bot")
+    logging.error("Non ho trovato il file di chatId_cancello. E' necessario creare un file 'chatid' con la chatid telegram per il bot")
     # In ogni caso questo file NON deve essere tracciato da git - viene ignorato perche' menzionato nel .gitignore.")
 
 logging.info("caricata chatId.")
