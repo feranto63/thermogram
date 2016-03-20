@@ -112,13 +112,17 @@ def handle(msg):
         return
 
     command = msg['text'].strip().lower()
+
     CurTemp = read_temp()
     CurTargetTemp=current_target_temp()
-    
+
+    orario = time.localtime(now)
+    localtime = time.asctime( orario )
+    giorno_ora_minuti = time.strftime("%a %H:%M", orario)
+
     print "temp confort:"+str(CurTargetTemp)
     print "chat_id ricevuto:"+str(chat_id)
     print "chat_id del Maggiordomo Belleza:"+str (CHAT_ID)
-    
     logging.debug('elaboro il comando '+command)
     
     if command == '/now':
@@ -142,27 +146,15 @@ def handle(msg):
         report_interval = None  # clear periodic reporting
         bot.sendMessage(CHAT_ID, "Certamente, Padrone")
     elif command == '/ho_freddo':
-        bot.sendMessage(CHAT_ID, "Funzionalita' in sviluppo")
-#        if heating_status:
-#            bot.sendMessage(CHAT_ID, "Sto facendo del mio meglio, Padrone")
-#        else:
-#            GPIO.output(HEAT_PIN, HEAT_ON) # sets port 0 to 1 (3.3V, on) per accendere i termosifoni
-#            heating_status = True #print "HEATING ON "+localtime+"\n"
-#            f = open("heating_status","w")
-#            f.write('ON')
-#            f.close()  #chiude il file dei dati e lo salva
-#            bot.sendMessage(CHAT_ID, "Accendo il riscaldamento, Padrone")
+        bot.sendMessage(CHAT_ID, "Ho capito che hai freddo")
+        f = open("heating_update","a")
+        f.write("F,"+heatstat+","+giorno_ora_minuti+","+str(CurTemp)+","+str(CurTargetTemp)+"\n")
+        f.close()  #chiude il file dei dati e lo salva
     elif command == '/ho_caldo':
-        bot.sendMessage(CHAT_ID, "Funzionalita' in sviluppo")
-#        if heating_status:
-#            GPIO.output(HEAT_PIN, HEAT_OFF) # sets port 0 to 0 (3.3V, off) per spengere i termosifoni
-#            heating_status = False #print "HEATING OFF "+localtime+"\n"
-#            f = open("heating_status","w")
-#            f.write('OFF')
-#            f.close()  #chiude il file dei dati e lo salva
-#            bot.sendMessage(CHAT_ID, "Spengo il riscaldamento, Padrone")
-#        else:      
-#            bot.sendMessage(CHAT_ID, "Dovresti aprire le finestre, Padrone")
+        bot.sendMessage(CHAT_ID, "Ho capito che hai caldo")
+        f = open("heating_update","a")
+        f.write("C,"+heatstat+","+giorno_ora_minuti+","+str(CurTemp)+","+str(CurTargetTemp)+"\n")
+        f.close()  #chiude il file dei dati e lo salva
     elif command == '/casa':
         who_is_at_home=""
         how_many_at_home=0
