@@ -126,7 +126,16 @@ def handle(msg):
 
     print "temp confort:"+str(CurTargetTemp)
     print "chat_id ricevuto:"+str(chat_id)
-    print "chat_id del Maggiordomo Belleza:"+str (CHAT_ID)
+    print "chat_id del Maggiordomo Bellezza:"+str (CHAT_ID)
+    if chat_id == CHAT_ID:
+        print "chat_id == CHAT_ID"
+    else:
+        print "chat_id != CHAT_ID"
+    if str(chat_id) == str(CHAT_ID):
+        print "str(chat_id) == str(CHAT_ID)"
+    else:
+        print "str(chat_id) != str(CHAT_ID)"
+        
     logging.debug('elaboro il comando '+command)
     
     if command == '/now':
@@ -192,11 +201,12 @@ def handle(msg):
             bot.sendMessage(CHAT_ID, "Modalita' pulizie disattivata")
     elif command == '/apri':
         GPIO.output(GATE_PIN, GATE_ON)
-        if chat_id == CHAT_ID:
+        if str(chat_id) == str(CHAT_ID):
             bot.sendMessage(CHAT_ID, "Apro il cancello Padrone")
         else:
             show_keyboard = {'keyboard': [['/apri']], 'resize_keyboard':True} #tastiera personalizzata
-            bot.sendMessage(chat_id, "Apro il cancello, Visitatore della casa Bellezza", reply_markup=show_keyboard)
+            bot.sendMessage(chat_id, "Apro il cancello, Visitatore della casa Bellezza")
+            bot.sendMessage(chat_id, "Premere /apri per aprire il cancello", reply_markup=show_keyboard)
             bot.sendMessage(CHAT_ID, "Un visitatore mi ha chiesto di aprire il cancello Padrone")
         time.sleep(2)
         GPIO.output(GATE_PIN, GATE_OFF)
