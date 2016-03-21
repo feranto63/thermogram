@@ -117,7 +117,7 @@ def handle(msg):
     CurTemp = read_temp()
     CurTargetTemp=current_target_temp()
 
-    orario = time.localtime(now)
+    orario = time.localtime(time.time())
     localtime = time.asctime( orario )
     giorno_ora_minuti = time.strftime("%a %H:%M", orario)
     if heating_status:
