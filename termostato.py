@@ -106,6 +106,7 @@ def handle(msg):
     
     logging.debug('inizio la gestione di handle')
     msg_type, chat_type, chat_id = telepot.glance(msg)
+    msg_sender = msg['from']['first_name']
 
     # ignore non-text message
     if msg_type != 'text':
@@ -135,6 +136,7 @@ def handle(msg):
         print "str(chat_id) == str(CHAT_ID)"
     else:
         print "str(chat_id) != str(CHAT_ID)"
+    print "mittente messaggio:"+msg_sender
         
     logging.debug('elaboro il comando '+command)
     
@@ -207,7 +209,7 @@ def handle(msg):
             show_keyboard = {'keyboard': [['/apri']], 'resize_keyboard':True} #tastiera personalizzata
             bot.sendMessage(chat_id, "Apro il cancello, Visitatore della casa Bellezza")
             bot.sendMessage(chat_id, "Premere /apri per aprire il cancello", reply_markup=show_keyboard)
-            bot.sendMessage(CHAT_ID, "Un visitatore mi ha chiesto di aprire il cancello Padrone")
+            bot.sendMessage(CHAT_ID, msg_sender+" mi ha chiesto di aprire il cancello Padrone")
         time.sleep(2)
         GPIO.output(GATE_PIN, GATE_OFF)
     else:
