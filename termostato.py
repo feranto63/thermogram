@@ -18,6 +18,9 @@ GATE_PIN = 22
 GATE_ON = 0
 GATE_OFF = 1
 
+lucchetto_chiuso = '\xF0\x9F\x94\x92'  #	lock U+1F512
+lucchetto_aperto = '\xF0\x9F\x94\x93'  #    open lock U+1F513	
+
 #imports for thermometer reading
 import os
 import glob
