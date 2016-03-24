@@ -146,7 +146,7 @@ def handle(msg):
     if command == '/now':
         bot.sendMessage(CHAT_ID, "La temperatura misurata e' di "+str("%0.1f" % CurTemp)+
                                  " C, Padrone\nLa temperatura di confort e' di "+str(CurTargetTemp)+" C\n"+
-                                 "Il riscaldamento e' "+heatstat)
+                                 "Il riscaldamento e' "+"disattivato per pulizie" if pulizie_status else heatstat)
     elif command == '/5m':
         bot.sendMessage(CHAT_ID, "Avvio il monitoraggio ogni 5 minuti, Padrone")
         last_report = time.time()
